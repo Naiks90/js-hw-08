@@ -22,7 +22,6 @@ const createGallery = galleryItems.map((galleryItem) => {
   imgRef.setAttribute('src', galleryItem.preview);
   imgRef.setAttribute('data-source', galleryItem.original);
   imgRef.setAttribute('alt', galleryItem.description);
-  // imgRef.setAttribute('data-index', galleryItems.indexOf(galleryItem));
 
   aRef.append(imgRef);
   liRef.append(aRef);
@@ -51,10 +50,10 @@ function showModalWindow(event) {
   refs.modalWindowBoxRef.classList.add('is-open');
   refs.modalWindowImgRef.setAttribute('alt', event.target.alt);
   refs.modalWindowImgRef.setAttribute('src', event.target.dataset.source);
-  // refs.modalWindowImgRef.setAttribute('data-index', event.target.dataset.index);
+
   window.addEventListener('keydown', onListenerkey);
 
-  refs.overlayBoxRef.addEventListener('click', hideModalWindow); //незрозумів чому Репета робив по іншому???
+  refs.overlayBoxRef.addEventListener('click', hideModalWindow);
 }
 
 function onListenerkey(event) {
@@ -79,20 +78,23 @@ function onJumpRight(src) {
   const arrImgsrc = galleryItems.map((galleryitem) => galleryitem.original);
 
   const item = arrImgsrc.filter((item) => item === src);
-  if (arrImgsrc.indexOf(...item) === 8) {
+
+  if (arrImgsrc.indexOf(...item) === galleryItems.length - 1) {
+    // hideModalWindow();
     return arrImgsrc[arrImgsrc.indexOf(...item)];
   }
 
   return arrImgsrc[arrImgsrc.indexOf(...item) + 1];
 }
+
 function onJumpLeft(src) {
   const arrImgsrc = galleryItems.map((galleryitem) => {
     return galleryitem.original;
   });
   const item = arrImgsrc.filter((item) => item === src);
-  // console.log(arrImgsrc.indexOf(...item));
 
   if (arrImgsrc.indexOf(...item) === 0) {
+    // hideModalWindow();
     return arrImgsrc[arrImgsrc.indexOf(...item)];
   }
   return arrImgsrc[arrImgsrc.indexOf(...item) - 1];
