@@ -46,26 +46,33 @@ function showModalWindow(event) {
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-
   refs.modalWindowBoxRef.classList.add('is-open');
   refs.modalWindowImgRef.setAttribute('alt', event.target.alt);
   refs.modalWindowImgRef.setAttribute('src', event.target.dataset.source);
-
   window.addEventListener('keydown', onListenerkey);
-
   refs.overlayBoxRef.addEventListener('click', hideModalWindow);
 }
 
 function onListenerkey(event) {
+  clickEscape(event);
+  clickArrowRight(event);
+  clickArrowLeft(event);
+}
+
+function clickEscape(event) {
   if (event.code === 'Escape') {
     hideModalWindow();
   }
+}
+function clickArrowRight(event) {
   if (event.code === 'ArrowRight') {
     refs.modalWindowImgRef.setAttribute(
       'src',
       onJumpRight(refs.modalWindowImgRef.src)
     );
   }
+}
+function clickArrowLeft(event) {
   if (event.code === 'ArrowLeft') {
     refs.modalWindowImgRef.setAttribute(
       'src',
@@ -75,27 +82,19 @@ function onListenerkey(event) {
 }
 
 function onJumpRight(src) {
-  const arrImgsrc = galleryItems.map((galleryitem) => galleryitem.original);
+  const arrImgSrc = galleryItems.map((galleryitem) => galleryitem.original);
+  const indexImgSrc = arrImgSrc.findIndex((item) => item === src);
 
-  const item = arrImgsrc.filter((item) => item === src);
-
-  if (arrImgsrc.indexOf(...item) === galleryItems.length - 1) {
-    // hideModalWindow();
-    return arrImgsrc[arrImgsrc.indexOf(...item)];
-  }
-
-  return arrImgsrc[arrImgsrc.indexOf(...item) + 1];
+  return indexImgSrc === galleryItems.length - 1
+    ? arrImgSrc[indexImgSrc]
+    : arrImgSrc[indexImgSrc + 1];
 }
 
 function onJumpLeft(src) {
-  const arrImgsrc = galleryItems.map((galleryitem) => {
-    return galleryitem.original;
-  });
-  const item = arrImgsrc.filter((item) => item === src);
+  const arrImgSrc = galleryItems.map((galleryitem) => galleryitem.original);
+  const indexImgSrc = arrImgSrc.findIndex((item) => item === src);
 
-  if (arrImgsrc.indexOf(...item) === 0) {
-    // hideModalWindow();
-    return arrImgsrc[arrImgsrc.indexOf(...item)];
-  }
-  return arrImgsrc[arrImgsrc.indexOf(...item) - 1];
+  return indexImgSrc === 0
+    ? arrImgSrc[indexImgSrc]
+    : arrImgSrc[indexImgSrc - 1];
 }
