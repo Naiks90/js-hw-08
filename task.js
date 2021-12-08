@@ -22,6 +22,7 @@ const createGallery = galleryItems.map((galleryItem) => {
   imgRef.setAttribute('src', galleryItem.preview);
   imgRef.setAttribute('data-source', galleryItem.original);
   imgRef.setAttribute('alt', galleryItem.description);
+  // imgRef.setAttribute('data-index', galleryItems.indexOf(galleryItem));
 
   aRef.append(imgRef);
   liRef.append(aRef);
@@ -42,12 +43,15 @@ function hideModalWindow(event) {
 }
 
 function showModalWindow(event) {
+  event.preventDefault();
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-  event.preventDefault();
+
   refs.modalWindowBoxRef.classList.add('is-open');
+  refs.modalWindowImgRef.setAttribute('alt', event.target.alt);
   refs.modalWindowImgRef.setAttribute('src', event.target.dataset.source);
+  // refs.modalWindowImgRef.setAttribute('data-index', event.target.dataset.index);
   window.addEventListener('keydown', onListenerkey);
 
   refs.overlayBoxRef.addEventListener('click', hideModalWindow); //незрозумів чому Репета робив по іншому???
@@ -58,9 +62,38 @@ function onListenerkey(event) {
     hideModalWindow();
   }
   if (event.code === 'ArrowRight') {
-    console.log('право');
+    refs.modalWindowImgRef.setAttribute(
+      'src',
+      onJumpRight(refs.modalWindowImgRef.src)
+    );
   }
   if (event.code === 'ArrowLeft') {
-    console.log('лево');
+    refs.modalWindowImgRef.setAttribute(
+      'src',
+      onJumpLeft(refs.modalWindowImgRef.src)
+    );
   }
+}
+
+function onJumpRight(src) {
+  const arrImgsrc = galleryItems.map((galleryitem) => galleryitem.original);
+
+  const item = arrImgsrc.filter((item) => item === src);
+  if (arrImgsrc.indexOf(...item) === 8) {
+    return arrImgsrc[arrImgsrc.indexOf(...item)];
+  }
+
+  return arrImgsrc[arrImgsrc.indexOf(...item) + 1];
+}
+function onJumpLeft(src) {
+  const arrImgsrc = galleryItems.map((galleryitem) => {
+    return galleryitem.original;
+  });
+  const item = arrImgsrc.filter((item) => item === src);
+  // console.log(arrImgsrc.indexOf(...item));
+
+  if (arrImgsrc.indexOf(...item) === 0) {
+    return arrImgsrc[arrImgsrc.indexOf(...item)];
+  }
+  return arrImgsrc[arrImgsrc.indexOf(...item) - 1];
 }
